@@ -5,7 +5,9 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
 
 import com.tomveselka.adventofcode2021.utils.FileReaderCustom;
 
@@ -47,6 +49,7 @@ public class DayFifteen {
 		vertexesDistance.put("1-0", map[1][0]);
 		vertexesPrevious.put("1-0", "0-0");
 		unvisited.remove("0-0");
+
 		while (vertexesDistance.get((height - 1) + "-" + (width - 1)) == Integer.MAX_VALUE) {
 			iterate(map);
 		}
@@ -159,14 +162,26 @@ public class DayFifteen {
 	public String findLowestElement() {
 		String lowestKey = "";
 		int minValue = Integer.MAX_VALUE;
+		int absoluteMin=Collections.min(vertexesDistance.values());
 
+		for (String key : unvisited) {
+			int value = vertexesDistance.get(key);
+			if (absoluteMin==value) {
+				return key;
+			}
+			if (value < minValue) {
+				minValue = value;
+				lowestKey = key;
+			}
+		}
+		/*
 		for (String key : unvisited) {
 			int value = vertexesDistance.get(key);
 			if (value < minValue) {
 				minValue = value;
 				lowestKey = key;
 			}
-		}
+		}*/
 		return lowestKey;
 	}
 
