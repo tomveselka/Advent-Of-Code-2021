@@ -18,40 +18,39 @@ public class DayTwentyFour {
 		List<String> input = rdr.readFileString(path);
 		dayTwentyFour.taskOne(input);
 		// dayTwentyFour.taskTwo(input);
-		
+
 	}
 
-	List<List<Instruction>> listOfInstructions = new ArrayList<List<Instruction>>();
-	List<Integer> inputParam = new ArrayList<Integer>();
+	List<Instruction> listOfInstructions = new ArrayList<Instruction>();
 
 	public void taskOne(List<String> input) {
 		processInput(input);
-		String highest="99999999999999";
-		StringBuilder finalNumber = new StringBuilder();
-		for (int i = 0; i < 14; i++) {
-			int w = 0;
-			int x = 0;
-			int y = 0;
-			int z = 0;
-			for (int num = 9; num > 0; num--) {
-				String[] firstLineSplit = input.get(inputParam.get(i)).split("\\s");
-				switch (firstLineSplit[1]) {
-				case "w":
-					w = num;
-					break;
-				case "x":
-					x = num;
-					break;
-				case "y":
-					y = num;
-					break;
-				default:
-					z = num;
-				}
-				List<Instruction> instructions = listOfInstructions.get(i);
-				for (int j = 0; j < instructions.size(); j++) {
-					Instruction instruction = instructions.get(j);
-
+		long highest = Long.valueOf("99999999999999");
+		int w = 0;
+		int x = 0;
+		int y = 0;
+		int z = 0;
+		boolean numberFound = false;
+		int pos = -1;
+		while (!numberFound) {
+			for (int i = 0; i < listOfInstructions.size(); i++) {
+				Instruction instruction = listOfInstructions.get(i);
+				if (null == instruction.getVariabl()) {
+					pos++;
+					switch (instruction.getParam()) {
+					case "w":
+						w = Integer.valueOf((Long.toString(highest).substring(pos, pos + 1)));
+						break;
+					case "x":
+						x = Integer.valueOf((Long.toString(highest).substring(pos, pos + 1)));
+						break;
+					case "y":
+						y = Integer.valueOf((Long.toString(highest).substring(pos, pos + 1)));
+						break;
+					default:
+						z = Integer.valueOf((Long.toString(highest).substring(pos, pos + 1)));
+					}
+				} else {
 					int variable = 0;
 					if (StringUtils.isNumeric(instruction.getVariabl())) {
 						variable = Integer.parseInt(instruction.getVariabl());
@@ -122,32 +121,27 @@ public class DayTwentyFour {
 					}
 				}
 
-				if(z==0) {
-					finalNumber.append(num);
-					break;
-				}
-
+			}
+			if(z==0) {
+				numberFound=true;
+			}else {
+				highest--;
+				pos=-1;
 			}
 		}
-		System.out.println("Maximum number is "+finalNumber.toString());
+		System.out.println("Maximum number is " + highest);
 	}
 
 	public void processInput(List<String> input) {
 		int i = 0;
 		while (i < input.size()) {
-			if (input.get(i).contains("inp")) {
-				inputParam.add(i);
-				List<Instruction> instructionList = new ArrayList<Instruction>();
-				int j = i + 1;
-				while (j<input.size()&&!input.get(j).contains("inp")) {
-					String[] line = input.get(j).split("\\s");
-					Instruction instruction = new Instruction(line[0], line[1], line[2]);
-					instructionList.add(instruction);
-					j++;
-				}
-				listOfInstructions.add(instructionList);
-				i = j;
+			String[] line = input.get(i).split("\\s");
+			Instruction instruction = new Instruction(line[0], line[1], null);
+			if(line.length>2) {
+			 instruction.setVariabl(line[2]);
 			}
+			listOfInstructions.add(instruction);
+			i++;
 		}
 	}
 
