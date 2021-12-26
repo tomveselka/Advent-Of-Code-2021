@@ -1,5 +1,6 @@
 package com.tomveselka.adventofcode2021.days;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.tomveselka.adventofcode2021.utils.FileReaderCustom;
@@ -79,6 +80,44 @@ public class DayTwentyOne {
 		}
 		System.out.println("Dice was rolled " + diceRolls + " times");
 		System.out.println("Final score is " + (losingScore * diceRolls));
+	}
+
+	public void taskTwo() {
+		long numberOfGames = 0;
+		List<Long> points = new ArrayList<Long>();// -21 win for P1, 0 draw +21 win for P2 -> list 43 elements long
+		List<Long> p1Pos = new ArrayList<Long>(); // number of games at each of positions
+		List<Long> p2Pos = new ArrayList<Long>();
+		// initialize arrays
+		for (int i = 0; i < 10; i++) {
+			p1Pos.add((long) 0);
+			p2Pos.add((long) 0);
+		}
+		for (int i = 0; i < 44; i++) {
+			points.add((long) 0);
+		}
+		// start position
+		p1Pos.set((player1Pos) % 10, (long) 1);
+		p1Pos.set((player2Pos) % 10, (long) 1);
+
+		// loop
+		do {
+			// P1 rolls
+			for (int i = 0; i < 3; i++) {
+				for (int j = 1; j < 4; j++) {					
+					for (int k = 0; k < p1Pos.size(); k++) {
+						if (p1Pos.get(k) > 0) {
+							if(k+j<11) {
+								p1Pos.set(k+j+1, p1Pos.get(k+j+1)+1);
+							}else {
+								p1Pos.set((k+j+1)%10, p1Pos.get((k+j+1)+1)%10);
+							}
+							//pridat points
+						}
+					}
+				}
+			}
+		} while (numberOfGames > 0);
+
 	}
 
 }
